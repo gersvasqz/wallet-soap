@@ -1,56 +1,42 @@
-var myService = {
-	MyService: {
-			MyPort: {
-					MyFunction: function(args) {
-							return {
-									name: args.name
-							};
-					},
+const soap = require('soap');
+const fs = require('fs');
+const http = require('http');
+const { register, recharge, payment, confirm, balance } = require('./controler');
 
-					// This is how to define an asynchronous function with a callback.
-					MyAsyncFunction: function(args, callback) {
-							// do some work
-							callback({
-									name: args.name
-							});
-					},
-
-					// This is how to define an asynchronous function with a Promise.
-					MyPromiseFunction: function(args) {
-							return new Promise((resolve) => {
-								// do some work
-								resolve({
-									name: args.name
-								});
-							});
-					},
-
-					// This is how to receive incoming headers
-					HeadersAwareFunction: function(args, cb, headers) {
-							return {
-									name: headers.Token
-							};
-					},
-
-					// You can also inspect the original `req`
-					reallyDetailedFunction: function(args, cb, headers, req) {
-							console.log('SOAP `reallyDetailedFunction` request from ' + req.connection.remoteAddress);
-							return {
-									name: headers.Token
-							};
-					}
-			}
+const WalletService = function (args){
+	console.log('estoy en la funcion correcta', args)
+	const json = JSON.parse(data);
+	let resp = {}
+	switch(json.operation){
+		case 'register': 
+			resp = register(json, resp)
+			break;
+		case 'recharge': 
+			resp = recharge(json, resp)
+			break;
+		case 'payment': 
+			resp = payment(json, resp)
+			break;
+		case 'confirm': 
+			resp = confirm(json, resp)
+			break;
+		case 'balance': 
+			resp = balance(json, resp)
+			break;
+		default:
+				resp.error = true;
+				resp.msg = 'invalid operation';
 	}
+	return resp;
 };
 
-var xml = require('fs').readFileSync('myservice.wsdl', 'utf8');
+const WalletService = { WalletService: { MyPort: { WalletService } } }
 
-//http server example
-var server = http.createServer(function(request,response) {
-	response.end('404: Not Found: ' + request.url);
-});
+const xml = fs.readFileSync('WalletService.wsdl', 'utf8');
+
+const server = http.createServer(() => console.log('Server soap is running'));
 
 server.listen(8000);
-soap.listen(server, '/wsdl', myService, xml, function(){
-console.log('server initialized');
+soap.listen(server, '/wsdl', WalletService, xml, function(){
+	console.log('server initialized');
 });
