@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<wsdl:definitions name="WalletService" targetNamespace="http://www.example.com/v1"
+<wsdl:definitions name="MyService" targetNamespace="http://www.example.com/v1"
                   xmlns="http://www.example.com/v1"
                   xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
                   xmlns:http="http://schemas.xmlsoap.org/wsdl/http/"
@@ -25,7 +25,7 @@
         </wsdl:part>
     </wsdl:message>
 
-    <wsdl:portType name="WalletServicePortType">
+    <wsdl:portType name="MyServicePortType">
         <wsdl:operation name="MyOperation">
             <wsdl:input message="InputMessage">
             </wsdl:input>
@@ -34,7 +34,7 @@
         </wsdl:operation>
     </wsdl:portType>
 
-    <wsdl:binding name="WalletServiceBinding" type="WalletServicePortType">
+    <wsdl:binding name="MyServiceBinding" type="MyServicePortType">
         <soap:binding style="document"
                       transport="http://schemas.xmlsoap.org/soap/http"/>
         <wsdl:operation name="MyOperation">
@@ -50,8 +50,8 @@
         </wsdl:operation>
     </wsdl:binding>
 
-    <wsdl:service name="WalletService">
-        <wsdl:port name="WalletServicePort" binding="WalletServiceBinding">
+    <wsdl:service name="MyService">
+        <wsdl:port name="MyServicePort" binding="MyServiceBinding">
             <soap:address location="http://www.example.com/v1"/>
         </wsdl:port>
     </wsdl:service>
