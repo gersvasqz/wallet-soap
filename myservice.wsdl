@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<wsdl:definitions name="MyService" targetNamespace="http://www.example.com/v1"
-                  xmlns="http://www.example.com/v1"
+<wsdl:definitions name="MyService" targetNamespace="http://localhost:8000/wsdl"
+                  xmlns="http://localhost:8000/wsdl"
                   xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
                   xmlns:http="http://schemas.xmlsoap.org/wsdl/http/"
                   xmlns:xs="http://www.w3.org/2001/XMLSchema"
@@ -8,8 +8,8 @@
     <wsdl:types>
         <xs:schema attributeFormDefault="qualified"
                    elementFormDefault="qualified"
-                   targetNamespace="http://www.example.com/v1"
-                   xmlns="http://www.example.com/v1">
+                   targetNamespace="http://localhost:8000/wsdl"
+                   xmlns="http://localhost:8000/wsdl">
             <xs:element name="Request">
             </xs:element>
             <xs:element name="Response">
@@ -52,7 +52,7 @@
 
     <wsdl:service name="MyService">
         <wsdl:port name="MyServicePort" binding="MyServiceBinding">
-            <soap:address location="http://www.example.com/v1"/>
+            <soap:address location="http://localhost:8000/wsdl"/>
         </wsdl:port>
     </wsdl:service>
 </wsdl:definitions>

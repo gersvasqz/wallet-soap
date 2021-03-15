@@ -15,18 +15,21 @@ const ClientSchema = new Schema({
   },
   phone: {
     type: Number,
-    require: [true, '{PATH} is required']
+    require: [true, '{PATH} is required'],
+    unique: [true, '{VALUE} ya registrado']
   },
   dni: {
-    type: Number,
-    require: [true, '{PATH} is required']
+    type: String,
+    require: [true, '{PATH} is required'],
+    unique: [true, '{VALUE} ya registrado']
   },
 })
 
-ClientSchema.post('save', function(doc) {
-  if(doc.isNew){
-    const wallet = new Wallet({client: doc._id})
-    wallet.save()
+ClientSchema.pre('save', async function() {
+  console.log('aqui', this.isNew, this._doc)
+  if(this.isNew) {
+    const wallet = new Wallet({client: this._doc._id})
+    await wallet.save().then(item => console.log('item', item)).catch(err => console.log(err))
   } 
 });
 
