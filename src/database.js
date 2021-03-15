@@ -1,7 +1,7 @@
-const dotenv = require('dotenv');
-const mongoose = require('mongoose');
+import { config } from 'dotenv';
+import { connect as _connect, set } from 'mongoose';
 
-dotenv.config();
+config();
 
 class Database {
   constructor() {
@@ -14,24 +14,23 @@ class Database {
     }
 
     const connect = `mongodb://${dbAuthString}${encodeURIComponent(
-      process.env.DB_HOST
+      process.env.DB_HOST,
     )}:${encodeURIComponent(process.env.DB_PORT)}/${encodeURIComponent(
-      process.env.DB_NAME
+      process.env.DB_NAME,
     )}`;
 
-    this.connection = mongoose
-      .connect(connect, {
+    this.connection = _connect(connect, {
         useNewUrlParser: true,
         useUnifiedTopology: true,
       })
-      .catch(error => {
+      .catch((error) => {
         console.error(`${new Date().toISOString()} - Database Connection.`);
         console.error(error);
         process.exit(500);
       });
 
-    mongoose.set('useCreateIndex', true);
+    set('useCreateIndex', true);
   }
 }
 
-module.exports = new Database();
+export default new Database();

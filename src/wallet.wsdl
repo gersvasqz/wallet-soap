@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="MyWalletService" targetNamespace="http://URL/wallet"
+                  xmlns="http://URL/wallet"
+                  xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+                  xmlns:http="http://schemas.xmlsoap.org/wsdl/http/"
+                  xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                  xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap12/">
+    <wsdl:types>
+        <xs:schema attributeFormDefault="qualified"
+                   elementFormDefault="qualified"
+                   targetNamespace="http://URL/wallet"
+                   xmlns="http://URL/wallet">
+            <xs:element name="email" />
+            <xs:element name="name" />
+            <xs:element name="phone" />
+            <xs:element name="dni" />
+            <xs:element name="value" />
+            <xs:element name="token" />
+            <xs:element name="Response">
+            </xs:element>
+        </xs:schema>
+    </wsdl:types>
+    <wsdl:message name="RegisterInputs">
+        <wsdl:part name="email" element="email" type="xs:number"> </wsdl:part>
+        <wsdl:part name="name" element="name"> </wsdl:part>
+        <wsdl:part name="phone" element="phone" type="xs:number" > </wsdl:part>
+        <wsdl:part name="dni" element="dni"> </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="OutputMessage">
+        <wsdl:part name="parameter" element="Response">
+        </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="RechargeInputs">
+        <wsdl:part name="value" element="value"> </wsdl:part>
+        <wsdl:part name="dni" element="dni"> </wsdl:part>
+        <wsdl:part name="phone" element="phone"> </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="PaymentInputs">
+        <wsdl:part name="dni" element="dni"> </wsdl:part>
+        <wsdl:part name="phone" element="phone"> </wsdl:part>
+        <wsdl:part name="value" element="value"> </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="ConfirmInputs">
+        <wsdl:part name="token" element="token"> </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="BalanceInputs">
+        <wsdl:part name="phone" element="phone"> </wsdl:part>
+        <wsdl:part name="dni" element="dni"> </wsdl:part>
+    </wsdl:message>
+    <wsdl:portType name="WalletPortType">
+        <wsdl:operation name="RegisterClient">
+            <wsdl:input message="RegisterInputs">
+            </wsdl:input>
+            <wsdl:output message="OutputMessage">
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="RechargeWallet">
+            <wsdl:input message="RechargeInputs">
+            </wsdl:input>
+            <wsdl:output message="OutputMessage">
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="PayWithWallet">
+            <wsdl:input message="PaymentInputs">
+            </wsdl:input>
+            <wsdl:output message="OutputMessage">
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="ConfirmToken">
+            <wsdl:input message="ConfirmInputs">
+            </wsdl:input>
+            <wsdl:output message="OutputMessage">
+            </wsdl:output>
+        </wsdl:operation>
+           <wsdl:operation name="GetBalance">
+            <wsdl:input message="BalanceInputs">
+            </wsdl:input>
+            <wsdl:output message="OutputMessage">
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:portType>
+
+    <wsdl:binding name="WalletBinding" type="WalletPortType">
+        <soap:binding style="document"
+                      transport="http://schemas.xmlsoap.org/soap/http"/>
+        <wsdl:operation name="RegisterClient">
+            <soap:operation soapAction="RegisterClient"/>
+            <wsdl:input>
+                <soap:body use="literal" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"
+                           encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="RechargeWallet">
+            <soap:operation soapAction="RechargeWallet"/>
+            <wsdl:input>
+                <soap:body use="literal" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"
+                           encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="PayWithWallet">
+            <soap:operation soapAction="PayWithWallet"/>
+            <wsdl:input>
+                <soap:body use="literal" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"
+                           encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="ConfirmToken">
+            <soap:operation soapAction="ConfirmToken"/>
+            <wsdl:input>
+                <soap:body use="literal" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"
+                           encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetBalance">
+            <soap:operation soapAction="GetBalance"/>
+            <wsdl:input>
+                <soap:body use="literal" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"
+                           encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+
+    <wsdl:service name="MyWalletService">
+        <wsdl:port name="Wallet" binding="WalletBinding">
+            <soap:address location="http://URL/wallet"/>
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>
