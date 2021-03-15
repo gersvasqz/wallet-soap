@@ -26,7 +26,6 @@ const ClientSchema = new Schema({
 })
 
 ClientSchema.pre('save', async function() {
-  console.log('aqui', this.isNew, this._doc)
   if(this.isNew) {
     const wallet = new Wallet({client: this._doc._id})
     await wallet.save().then(item => console.log('item', item)).catch(err => console.log(err))
