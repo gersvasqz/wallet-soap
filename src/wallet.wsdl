@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<wsdl:definitions name="MyWalletService" targetNamespace="http://localhost:8000/wallet"
-                  xmlns="http://localhost:8000/wallet"
+<wsdl:definitions name="MyWalletService" targetNamespace="http://URL/wallet"
+                  xmlns="http://URL/wallet"
                   xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
                   xmlns:http="http://schemas.xmlsoap.org/wsdl/http/"
                   xmlns:xs="http://www.w3.org/2001/XMLSchema"
@@ -8,8 +8,8 @@
     <wsdl:types>
         <xs:schema attributeFormDefault="qualified"
                    elementFormDefault="qualified"
-                   targetNamespace="http://localhost:8000/wallet"
-                   xmlns="http://localhost:8000/wallet">
+                   targetNamespace="http://URL/wallet"
+                   xmlns="http://URL/wallet">
             <xs:element name="email" />
             <xs:element name="name" />
             <xs:element name="phone" />
@@ -137,7 +137,7 @@
 
     <wsdl:service name="MyWalletService">
         <wsdl:port name="Wallet" binding="WalletBinding">
-            <soap:address location="http://localhost:8000/wallet"/>
+            <soap:address location="http://URL/wallet"/>
         </wsdl:port>
     </wsdl:service>
 </wsdl:definitions>
