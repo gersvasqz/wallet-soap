@@ -1,44 +1,47 @@
-const Client = require('./models/client');
-const Wallet = require('./models/wallet');
+import Client from './models/client';
+import Wallet from './models/wallet';
 
 
 const formatErrors = (items) => {
   const errors = []
   if (items) {
-    for (item in items) {
-      if (item) errors.push(items[item].toString())
-    }
+    const keys = Object.keys(items)
+    keys.forEach(i => {
+      errors.push(items[i].toString())
+    })
   }
   return errors
 }
 
-const parseJSON = (json) => {
-  return {
+const parseJSON = (json) => ({
     dni: json.dni ? json.dni.trim() : undefined,
     name: json.name ? json.name.trim() : undefined,
     phone: json.phone ? Number.parseInt(json.phone, 10) : undefined,
     email: json.email ? json.email.trim() : undefined,
     token: json.token ? json.token.trim() : undefined,
     value: json.value ? Number.parseFloat(json.value) : undefined,
-  }
-
-}
+  })
 
 const RegisterClient = async (json) => {
   const data = parseJSON(json)
   try {
     const client = new Client(data);
-    let error = client.validateSync()
-    const errors = formatErrors(error.errors)
+    const error = client.validateSync()
     if (error) return {
       error: true,
-      errors,
+      errors: formatErrors(error.errors),
       msg: 'Invalid Params!'
     }
 
-    await client.save();
+    const resp = await client.save().catch(e =>({
+        error: true,
+        errors: formatErrors(e.errors),
+        msg: 'Invalid Params'
+      }));
+    if(resp.error) return resp
     return {
       error: false,
+      errors: [],
       msg: 'client created successfully'
     }
   } catch (err) {
@@ -56,22 +59,22 @@ const RechargeWallet = async (json) => {
     const { dni, phone, value } = parseJSON(json)
     if (!value) return {
       error: true,
-      msg: "Value is required",
-      errors: []
+      errors: [],
+      msg: "Value is required"
     }
     const client = await Client.findOne({ dni, phone })
     if (!client) return {
       error: true,
-      msg: "Client does not exist",
-      errors: []
+      errors: [],
+      msg: "Client does not exist"
     }
     const wallet = await Wallet.findOne({ client: client._id })
     wallet.value += value
     await wallet.save()
     return {
       error: false,
-      msg: 'Wallet is recharge',
-      errors: []
+      errors: [],
+      msg: 'Wallet is recharged'
     }
   } catch (err) {
     console.error(`${new Date().toISOString()} -- Recharge error -- \n${err.toString()}\n______________\n`)
@@ -84,7 +87,7 @@ const RechargeWallet = async (json) => {
 
 }
 
-const PayWithWallet = (json, resp) => {
+const PayWithWallet = (json) => {
   console.log('estoy en Payment', json)
   return json
   // return DB.connection.then(() => {
@@ -94,7 +97,7 @@ const PayWithWallet = (json, resp) => {
   // })
 }
 
-const ConfirmToken = (json, resp) => {
+const ConfirmToken = (json) => {
   console.log('estoy en ConfirmToken', json)
   return json
   // return DB.connection.then(() => {
@@ -105,13 +108,13 @@ const ConfirmToken = (json, resp) => {
 }
 
 const GetBalance = async (json) => {
-try {
-  const { dni, phone } = parseJSON(json)
-  const client = await Client.findOne({ dni, phone })
+  try {
+    const { dni, phone } = parseJSON(json)
+    const client = await Client.findOne({ dni, phone })
     if (!client) return {
       error: true,
-      msg: "Client does not exist",
-      errors: []
+      errors: [],
+      msg: "Client does not exist"
     }
     const wallet = await Wallet.findOne({ client: client._id })
     return {
@@ -124,7 +127,7 @@ try {
       }
     }
 
-}catch (err) {
+  } catch (err) {
     console.error(`${new Date().toISOString()} -- Balance error -- \n${err.toString()}\n______________\n`)
     return {
       error: true,
@@ -135,4 +138,4 @@ try {
 }
 
 
-module.exports = { RegisterClient, RechargeWallet, PayWithWallet, ConfirmToken, GetBalance }
+export default { RegisterClient, RechargeWallet, PayWithWallet, ConfirmToken, GetBalance }
