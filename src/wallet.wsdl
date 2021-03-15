@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<wsdl:definitions name="MyService" targetNamespace="http://localhost:8000/wsdl"
-                  xmlns="http://localhost:8000/wsdl"
+<wsdl:definitions name="MyWalletService" targetNamespace="http://localhost:8000/wallet"
+                  xmlns="http://localhost:8000/wallet"
                   xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
                   xmlns:http="http://schemas.xmlsoap.org/wsdl/http/"
                   xmlns:xs="http://www.w3.org/2001/XMLSchema"
@@ -8,8 +8,8 @@
     <wsdl:types>
         <xs:schema attributeFormDefault="qualified"
                    elementFormDefault="qualified"
-                   targetNamespace="http://localhost:8000/wsdl"
-                   xmlns="http://localhost:8000/wsdl">
+                   targetNamespace="http://localhost:8000/wallet"
+                   xmlns="http://localhost:8000/wallet">
             <xs:element name="email" />
             <xs:element name="name" />
             <xs:element name="phone" />
@@ -31,9 +31,9 @@
         </wsdl:part>
     </wsdl:message>
     <wsdl:message name="RechargeInputs">
+        <wsdl:part name="value" element="value"> </wsdl:part>
         <wsdl:part name="dni" element="dni"> </wsdl:part>
         <wsdl:part name="phone" element="phone"> </wsdl:part>
-        <wsdl:part name="value" element="value"> </wsdl:part>
     </wsdl:message>
     <wsdl:message name="PaymentInputs">
         <wsdl:part name="dni" element="dni"> </wsdl:part>
@@ -44,10 +44,10 @@
         <wsdl:part name="token" element="token"> </wsdl:part>
     </wsdl:message>
     <wsdl:message name="BalanceInputs">
-        <wsdl:part name="dni" element="dni"> </wsdl:part>
         <wsdl:part name="phone" element="phone"> </wsdl:part>
+        <wsdl:part name="dni" element="dni"> </wsdl:part>
     </wsdl:message>
-    <wsdl:portType name="MyServicePortType">
+    <wsdl:portType name="WalletPortType">
         <wsdl:operation name="RegisterClient">
             <wsdl:input message="RegisterInputs">
             </wsdl:input>
@@ -60,7 +60,7 @@
             <wsdl:output message="OutputMessage">
             </wsdl:output>
         </wsdl:operation>
-        <wsdl:operation name="Payment">
+        <wsdl:operation name="PayWithWallet">
             <wsdl:input message="PaymentInputs">
             </wsdl:input>
             <wsdl:output message="OutputMessage">
@@ -80,11 +80,11 @@
         </wsdl:operation>
     </wsdl:portType>
 
-    <wsdl:binding name="WalletBinding" type="Wallet">
+    <wsdl:binding name="WalletBinding" type="WalletPortType">
         <soap:binding style="document"
                       transport="http://schemas.xmlsoap.org/soap/http"/>
         <wsdl:operation name="RegisterClient">
-            <soap:operation soapAction="register"/>
+            <soap:operation soapAction="RegisterClient"/>
             <wsdl:input>
                 <soap:body use="literal" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
             </wsdl:input>
@@ -94,7 +94,7 @@
             </wsdl:output>
         </wsdl:operation>
         <wsdl:operation name="RechargeWallet">
-            <soap:operation soapAction="recharge"/>
+            <soap:operation soapAction="RechargeWallet"/>
             <wsdl:input>
                 <soap:body use="literal" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
             </wsdl:input>
@@ -103,8 +103,8 @@
                            encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
             </wsdl:output>
         </wsdl:operation>
-        <wsdl:operation name="Payment">
-            <soap:operation soapAction="payment"/>
+        <wsdl:operation name="PayWithWallet">
+            <soap:operation soapAction="PayWithWallet"/>
             <wsdl:input>
                 <soap:body use="literal" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
             </wsdl:input>
@@ -114,7 +114,7 @@
             </wsdl:output>
         </wsdl:operation>
         <wsdl:operation name="ConfirmToken">
-            <soap:operation soapAction="confirm"/>
+            <soap:operation soapAction="ConfirmToken"/>
             <wsdl:input>
                 <soap:body use="literal" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
             </wsdl:input>
@@ -124,7 +124,7 @@
             </wsdl:output>
         </wsdl:operation>
         <wsdl:operation name="GetBalance">
-            <soap:operation soapAction="balance"/>
+            <soap:operation soapAction="GetBalance"/>
             <wsdl:input>
                 <soap:body use="literal" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
             </wsdl:input>
@@ -137,7 +137,7 @@
 
     <wsdl:service name="MyWalletService">
         <wsdl:port name="Wallet" binding="WalletBinding">
-            <soap:address location="http://localhost:8000/wsdl"/>
+            <soap:address location="http://localhost:8000/wallet"/>
         </wsdl:port>
     </wsdl:service>
 </wsdl:definitions>

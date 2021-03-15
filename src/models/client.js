@@ -1,11 +1,12 @@
 const { Schema, model } = require('mongoose');
+const uniqueValidator = require('mongoose-unique-validator')
 const Wallet = require('./wallet');
 
 const ClientSchema = new Schema({
-  name: { type: String, require: [true, 'name is required'] },
+  name: { type: String, required: [true, '{PATH} is required'] },
   email: {
     type: String,
-    require: [true, '{PATH} is required'],
+    required: [true, '{PATH} is required'],
     validate: {
       validator: function(v) {
         return /^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/i.test(v);
@@ -15,20 +16,21 @@ const ClientSchema = new Schema({
   },
   phone: {
     type: Number,
-    require: [true, '{PATH} is required'],
-    unique: [true, '{VALUE} ya registrado']
+    required: [true, '{PATH} is required'],
+    unique: true
   },
   dni: {
     type: String,
-    require: [true, '{PATH} is required'],
-    unique: [true, '{VALUE} ya registrado']
+    required: [true, '{PATH} is required'],
+    unique: true
   },
 })
 
+ClientSchema.plugin(uniqueValidator, { message: '{PATH} already exist' });
 ClientSchema.pre('save', async function() {
   if(this.isNew) {
     const wallet = new Wallet({client: this._doc._id})
-    await wallet.save().then(item => console.log('item', item)).catch(err => console.log(err))
+    await wallet.save()
   } 
 });
 
