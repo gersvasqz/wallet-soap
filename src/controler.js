@@ -12,9 +12,9 @@ const sendMail = async(name, email, token) => {
     subject: 'Authorization token',
     html: `<h3> Hello ${name}</3><br />
     Your authorization token is: ${token} <p>
-    Please go to <a href="http://localhost:9000/api/confirm-token/${token}"> confirm token </a><p>
+    Please go to <a href="http://${process.env.HOST_WEB}"> for confirm token </a><p>
     Tranks!`,
-  })
+  }).then(()=> console.info('email sent')).catch(() => console.error('email not sent'))
 }
 
 const formatErrors = (items) => {
@@ -52,7 +52,7 @@ const RegisterClient = async (json) => {
     const resp = await client.save().catch(e =>({
         error: true,
         errors: formatErrors(e.errors),
-        msg: 'Invalid Params'
+        msg: 'Invalid Params!'
       }));
     if(resp.error) return resp
     return {
@@ -124,7 +124,7 @@ const PayWithWallet = async (json) => {
       msg: "Client does not exist"
     }
     const wallet = await Wallet.findOne({ client: client._id })
-    if(wallet.value === 0) return {
+    if(wallet.value === 0 || ((wallet.value - value) < 0 )) return {
       error: true,
       errors: [],
       msg: "Insufficient balance"
@@ -137,11 +137,12 @@ const PayWithWallet = async (json) => {
       value
     });
     await invoice.save()
-    await sendMail(client.name, client.email, token)
+    sendMail(client.name, client.email, token)
     return {
       error: false,
       errors: [],
-      msg: `Your Authorization Token has been sent to: ${client.email}`
+      msg: `Your Authorization Token has been sent to: ${client.email}`,
+      session
     }
   } catch (err) {
     console.error(`${new Date().toISOString()} -- PayWithWallet error -- \n${err.toString()}\n______________\n`)
@@ -165,6 +166,13 @@ const ConfirmToken = async (json) => {
   
     const wallet = await Wallet.findOne({ _id: invoice.wallet })
     wallet.value -= invoice.value;
+
+    if(wallet.value < 0) return {
+      error: true,
+      errors: [],
+      msg: "Insufficient balance"
+    }
+
     wallet.history.push({
       historyid: token.replace('TOKEN-', 'TRANSACCION-'),
       date: new Date(),
