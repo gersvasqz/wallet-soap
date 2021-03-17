@@ -14,6 +14,7 @@ const ClientSchema = new Schema({
         ),
       message: "{VALUE} is not a valid email!",
     },
+    unique: true
   },
   phone: {
     type: Number,
