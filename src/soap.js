@@ -17,10 +17,12 @@ const HOST = process.env.HOST || '127.0.0.1';
 const xmlFile = readFileSync('src/wallet.wsdl', 'utf8');
 
 const xml = xmlFile.replace(/URL\b/g, `${HOST}:${PORT}`)
-const server = createServer();
+const server = createServer((_, res) => {
+  res.end('server soap')
+});
 
 
-server.listen(8000);
+server.listen(PORT. HOST);
 listen(server, '/wallet', walletService, xml, () => {
   console.info('server initialized');
 });
